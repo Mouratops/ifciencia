@@ -1,0 +1,120 @@
+:root {
+    --azul-escuro: #1d1c52;
+    --azul-claro: #6b98cc;
+    --branco: #ffffff;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Jockey One', sans-serif;
+    background: linear-gradient(to bottom, var(--azul-claro), var(--azul-escuro));
+    color: var(--branco);
+    min-height: 100vh;
+  }
+  
+  header {
+    padding: 50px 20px;
+    text-align: center;
+  }
+  
+  header h1 {
+    font-family: 'Lilita One', cursive;
+    font-size: 3.5em;
+  }
+  
+  header p {
+    font-size: 1.2em;
+    margin-top: 10px;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 30px 0;
+    margin: 0 auto;
+    width: fit-content;
+  }
+  
+  nav a {
+    font-family: 'Lilita One', cursive;
+    font-size: 1.2em;
+    color: var(--azul-escuro);
+    background-color: var(--branco);
+    text-decoration: none;
+    padding: 15px 35px;
+    border-radius: 50px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+  
+  nav a:hover {
+    background: var(--azul-claro);
+    color: var(--branco);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  main {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  
+  section {
+    background-color: var(--branco);
+    padding: 30px;
+    border-radius: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    color: var(--azul-escuro);
+  }
+  
+  h2 {
+    font-family: 'Lilita One', cursive;
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    font-size: 1.1em;
+  }
+  
+  footer {
+    background-color: var(--azul-escuro);
+    color: var(--branco);
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+  }
+  
+  @media (max-width: 768px) {
+    header h1 {
+      font-size: 2.5em;
+    }
+  
+    nav {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    nav a {
+      width: 80%;
+      text-align: center;
+    }
+  }
+
+  nav a.botao-sobre-nos:hover {
+    background: #4a72b8;
+    color: var(--branco);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  }
+  
+  
