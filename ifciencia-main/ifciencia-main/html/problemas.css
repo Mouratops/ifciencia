@@ -1,0 +1,137 @@
+:root {
+  --azul-escuro: #1d1c52;
+  --azul-claro: #6b98cc;
+  --branco: #ffffff;
+}
+
+body {
+  margin: 0;
+  text-align: center;
+  font-family: 'Jockey One', sans-serif;
+  background: linear-gradient(to bottom, var(--azul-claro), var(--azul-escuro));
+  color: var(--branco);
+  min-height: 100vh;
+}
+
+header {
+  
+  backdrop-filter: blur(8px);
+  padding: 20px;
+  top: 0;
+  z-index: 10;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+header p {
+  margin: 5px 0 15px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+nav a {
+  margin-top: 35px;
+  width: 10%;
+  padding: 15px 35px;
+  background: linear-gradient(135deg, #213271 0%, #5D7AC9 100%);
+  color: #C1C8DF;
+  font-size: 17px;
+  font-weight: 1px;
+  border: none;
+  border-radius: 50px; 
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#cadastro-box button:hover {
+  background: linear-gradient(135deg, #5C7BCA 0%, #B0C3E4 100%);
+  color: #3D4F88;
+  transform: scale(1.02);
+}
+
+
+
+nav a:hover {
+  transform: scale(1.05);
+  background: linear-gradient(145deg, #d5e3ff, #a5c2ff);
+}
+
+.section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin: 60px 0;
+  padding: 0 20px;
+}
+
+.section h2 {
+  width: 100%;
+  font-size: 26px;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+.text-box, .img-box {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  margin: 10px;
+  padding: 15px;
+  width: 400px;
+  color: #fff;
+  text-align: justify;
+}
+
+.img-box img {
+  width: 100%;
+  border-radius: 10px;
+  display: block;
+}
+
+footer {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  color: #cfdfff;
+  font-size: 13px;
+}
+
+@media (max-width: 850px) {
+  .text-box, .img-box {
+    width: 90%;
+  }}
+
+#mais {
+ display: none;
+ transition: all 0.4s ease;
+}
+
+.saiba-mais {
+  display: block;
+  width: 150px;
+  margin: 15px auto 0;
+  padding: 10px 20px;
+  background-color: #5a74c4;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.saiba-mais:hover {
+  background-color: #3b5393;
+  transform: scale(1.05);
+}

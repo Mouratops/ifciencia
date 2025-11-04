@@ -1,0 +1,306 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Flappy Tartaruga - Conscientização Marinha</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      background: linear-gradient(to bottom, #6ec6ff 0%, #b3e5fc 100%);
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game"></canvas>
+
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    // 🐢 Tartaruga
+    let turtle = {
+      x: canvas.width / 6,
+      y: canvas.height / 2,
+      radius: 20,
+      gravity: 0.5,
+      lift: -9,
+      velocity: 0
+    };
+
+    let pipes = [];
+    let frame = 0;
+    const pipeWidth = 90;
+    let baseGap = 180;
+    let score = 0;
+    let speed = 3;
+    let pipeRate = 110;
+
+    // ☁️ Nuvens
+    let clouds = [];
+    for (let i = 0; i < 10; i++) {
+      clouds.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * (canvas.height / 2),
+        size: 30 + Math.random() * 50,
+        speed: 0.3 + Math.random() * 0.5
+      });
+    }
+
+    function drawClouds() {
+      ctx.fillStyle = "rgba(255,255,255,0.8)";
+      clouds.forEach(cloud => {
+        ctx.beginPath();
+        ctx.arc(cloud.x, cloud.y, cloud.size, 0, Math.PI * 2);
+        ctx.fill();
+        cloud.x -= cloud.speed;
+        if (cloud.x + cloud.size < 0) {
+          cloud.x = canvas.width + cloud.size;
+          cloud.y = Math.random() * (canvas.height / 2);
+        }
+      });
+    }
+
+    // 🌊 Mar
+    let waveOffset = 0;
+    function drawSea() {
+      const seaHeight = 80;
+      const yBase = canvas.height - seaHeight;
+      ctx.fillStyle = "#1e90ff"; // Mar azul fixo
+      ctx.fillRect(0, yBase, canvas.width, seaHeight);
+
+      ctx.fillStyle = "#00bfff";
+      ctx.beginPath();
+      ctx.moveTo(0, yBase);
+      for (let x = 0; x <= canvas.width; x++) {
+        const y = yBase + Math.sin((x + waveOffset) * 0.02) * 10;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(canvas.width, canvas.height);
+      ctx.lineTo(0, canvas.height);
+      ctx.closePath();
+      ctx.fill();
+
+      waveOffset += 2;
+    }
+
+    // 🐢 Tartaruga desenhada
+    function drawTurtle() {
+      ctx.beginPath();
+      ctx.arc(turtle.x, turtle.y, turtle.radius, 0, Math.PI * 2);
+      ctx.fillStyle = "#2e8b57";
+      ctx.fill();
+      ctx.strokeStyle = "#145a32";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(turtle.x - 10, turtle.y);
+      ctx.lineTo(turtle.x + 10, turtle.y);
+      ctx.moveTo(turtle.x, turtle.y - 10);
+      ctx.lineTo(turtle.x, turtle.y + 10);
+      ctx.strokeStyle = "#196f3d";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(turtle.x + 25, turtle.y, 10, 0, Math.PI * 2);
+      ctx.fillStyle = "#32cd32";
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(turtle.x + 28, turtle.y - 3, 3, 0, Math.PI * 2);
+      ctx.fillStyle = "black";
+      ctx.fill();
+
+      ctx.fillStyle = "#3cb371";
+      ctx.beginPath();
+      ctx.arc(turtle.x - 10, turtle.y + 15, 6, 0, Math.PI * 2);
+      ctx.arc(turtle.x + 10, turtle.y + 15, 6, 0, Math.PI * 2);
+      ctx.arc(turtle.x - 10, turtle.y - 15, 6, 0, Math.PI * 2);
+      ctx.arc(turtle.x + 10, turtle.y - 15, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Canudo
+    function drawStripedPipe(x, y, height) {
+      const stripeWidth = 15;
+      for (let i = 0; i < height; i += stripeWidth) {
+        ctx.fillStyle = (Math.floor(i / stripeWidth) % 2 === 0) ? "red" : "white";
+        ctx.fillRect(x, y + i, pipeWidth, stripeWidth);
+      }
+    }
+
+    // Garrafa
+    function drawBottle(x, y, height) {
+      ctx.fillStyle = "#00bfff";
+      ctx.fillRect(x + 20, y, pipeWidth - 40, height);
+      ctx.fillStyle = "#0080ff";
+      ctx.fillRect(x + 30, y - 10, pipeWidth - 60, 10);
+      ctx.fillStyle = "rgba(255,255,255,0.3)";
+      ctx.fillRect(x + 25, y + 10, 5, height - 20);
+    }
+
+    // Fumaça
+    function drawSmoke() {
+      for (let i = 0; i < 5; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * 150;
+        ctx.fillStyle = "rgba(60,60,60,0.4)";
+        ctx.beginPath();
+        ctx.arc(x, y, 60 + Math.random() * 40, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Chuva
+    let rainDrops = [];
+    function drawRain() {
+      if (rainDrops.length < 100) {
+        rainDrops.push({ x: Math.random() * canvas.width, y: 0 });
+      }
+      ctx.strokeStyle = "rgba(200,200,255,0.5)";
+      ctx.lineWidth = 2;
+      rainDrops.forEach(drop => {
+        ctx.beginPath();
+        ctx.moveTo(drop.x, drop.y);
+        ctx.lineTo(drop.x + 2, drop.y + 10);
+        ctx.stroke();
+        drop.y += 10;
+        if (drop.y > canvas.height) drop.y = 0;
+      });
+    }
+
+    // Pipes (canudos/garrafas)
+    function drawPipes() {
+      pipes.forEach(pipe => {
+        if (score < 15) {
+          drawStripedPipe(pipe.x, 0, pipe.top);
+          drawStripedPipe(pipe.x, pipe.top + pipe.gap, canvas.height - (pipe.top + pipe.gap));
+        } else if (score < 30) {
+          drawBottle(pipe.x, 0, pipe.top);
+          drawBottle(pipe.x, pipe.top + pipe.gap, canvas.height - (pipe.top + pipe.gap));
+        } else if (score < 50) {
+          drawBottle(pipe.x, 0, pipe.top);
+          drawBottle(pipe.x, pipe.top + pipe.gap, canvas.height - (pipe.top + pipe.gap));
+        } else {
+          // Poluição total
+          if (Math.random() > 0.5) drawBottle(pipe.x, 0, pipe.top);
+          else drawStripedPipe(pipe.x, 0, pipe.top);
+          if (Math.random() > 0.5) drawBottle(pipe.x, pipe.top + pipe.gap, canvas.height - (pipe.top + pipe.gap));
+          else drawStripedPipe(pipe.x, pipe.top + pipe.gap, canvas.height - (pipe.top + pipe.gap));
+        }
+      });
+    }
+
+    function updatePipes() {
+      if (frame % Math.floor(pipeRate) === 0) {
+        let top = Math.random() * (canvas.height / 2);
+        pipes.push({ x: canvas.width, top: top, gap: baseGap, passed: false });
+      }
+
+      pipes.forEach(pipe => {
+        pipe.x -= speed;
+
+        if (
+          turtle.x + turtle.radius > pipe.x &&
+          turtle.x - turtle.radius < pipe.x + pipeWidth &&
+          (turtle.y - turtle.radius < pipe.top ||
+           turtle.y + turtle.radius > pipe.top + pipe.gap)
+        ) {
+          resetGame();
+        }
+
+        if (!pipe.passed && pipe.x + pipeWidth < turtle.x - turtle.radius) {
+          score++;
+          pipe.passed = true;
+
+          if (score % 10 === 0) {
+            speed += 0.6;
+            baseGap -= 8;
+            pipeRate -= 3;
+            if (baseGap < 120) baseGap = 120;
+            if (pipeRate < 60) pipeRate = 60;
+          }
+        }
+      });
+
+      pipes = pipes.filter(pipe => pipe.x + pipeWidth > 0);
+    }
+
+    function drawScore() {
+      ctx.fillStyle = "black";
+      ctx.font = "bold 32px Arial";
+      ctx.fillText("Pontos: " + score, 20, 50);
+    }
+
+    function updateTurtle() {
+      turtle.velocity += turtle.gravity;
+      turtle.y += turtle.velocity;
+
+      if (turtle.y + turtle.radius > canvas.height - 80) resetGame();
+      if (turtle.y - turtle.radius < 0) turtle.y = turtle.radius;
+    }
+
+    function resetGame() {
+      alert("🐢 Game Over! Pontos: " + score + "\nA poluição aumentou... cuide dos oceanos!");
+      pipes = [];
+      score = 0;
+      speed = 3;
+      baseGap = 180;
+      pipeRate = 110;
+      turtle.y = canvas.height / 2;
+      turtle.velocity = 0;
+      frame = 0;
+    }
+
+    function loop() {
+      // Fundo muda com poluição
+      if (score < 50) {
+        ctx.fillStyle = "linear-gradient(to bottom, #6ec6ff, #b3e5fc)";
+      } else {
+        const darkness = Math.min((score - 50) * 2, 100);
+        ctx.fillStyle = `rgb(${110 - darkness}, ${198 - darkness}, ${255 - darkness})`;
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      drawClouds();
+      drawPipes();
+      drawSea();
+      drawTurtle();
+      drawScore();
+
+      if (score >= 50) {
+        drawSmoke();
+        drawRain();
+      }
+
+      updateTurtle();
+      updatePipes();
+      frame++;
+      requestAnimationFrame(loop);
+    }
+
+    document.addEventListener("keydown", e => {
+      if (e.code === "Space") {
+        turtle.velocity = turtle.lift;
+      }
+    });
+
+    loop();
+  </script>
+</body>
+</html>
