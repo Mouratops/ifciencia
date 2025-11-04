@@ -4,6 +4,13 @@
   --branco: #ffffff;
 }
 
+* {
+
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   text-align: center;
@@ -24,12 +31,14 @@ header {
 header h1 {
   margin: 0;
   font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 header p {
   margin: 5px 0 15px;
   font-size: 13px;
   opacity: 0.9;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 nav {
@@ -43,7 +52,7 @@ nav a {
   width: 10%;
   padding: 15px 35px;
   background: linear-gradient(135deg, #213271 0%, #5D7AC9 100%);
-  color: #C1C8DF;
+  color: #1D1C52;
   font-size: 17px;
   font-weight: 1px;
   border: none;
@@ -100,10 +109,13 @@ nav a:hover {
 }
 
 footer {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 15px;
-  color: #cfdfff;
-  font-size: 13px;
+  background-color: var(--azul-escuro);
+  color: var(--branco);
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
 }
 
 @media (max-width: 850px) {

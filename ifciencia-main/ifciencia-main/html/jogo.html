@@ -1,9 +1,9 @@
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Flappy Tartaruga - Conscientização Marinha</title>
+  <title>Flappy Turtle</title>
   <style>
     html, body {
       margin: 0;
@@ -12,9 +12,7 @@
       height: 100%;
       background: linear-gradient(to bottom, #6ec6ff 0%, #b3e5fc 100%);
     }
-    canvas {
-      display: block;
-    }
+    canvas { display: block; }
   </style>
 </head>
 <body>
@@ -24,6 +22,7 @@
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
 
+    // Tela cheia
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -31,7 +30,7 @@
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
-    // 🐢 Tartaruga
+    // Tartaruga feia
     let turtle = {
       x: canvas.width / 6,
       y: canvas.height / 2,
@@ -41,10 +40,11 @@
       velocity: 0
     };
 
+    // Obstáculos
     let pipes = [];
     let frame = 0;
     const pipeWidth = 90;
-    let baseGap = 180;
+    let gap = 180;
     let score = 0;
     let speed = 3;
     let pipeRate = 110;
@@ -74,30 +74,7 @@
       });
     }
 
-    // 🌊 Mar
-    let waveOffset = 0;
-    function drawSea() {
-      const seaHeight = 80;
-      const yBase = canvas.height - seaHeight;
-      ctx.fillStyle = "#1e90ff"; // Mar azul fixo
-      ctx.fillRect(0, yBase, canvas.width, seaHeight);
-
-      ctx.fillStyle = "#00bfff";
-      ctx.beginPath();
-      ctx.moveTo(0, yBase);
-      for (let x = 0; x <= canvas.width; x++) {
-        const y = yBase + Math.sin((x + waveOffset) * 0.02) * 10;
-        ctx.lineTo(x, y);
-      }
-      ctx.lineTo(canvas.width, canvas.height);
-      ctx.lineTo(0, canvas.height);
-      ctx.closePath();
-      ctx.fill();
-
-      waveOffset += 2;
-    }
-
-    // 🐢 Tartaruga desenhada
+    // Original
     function drawTurtle() {
       ctx.beginPath();
       ctx.arc(turtle.x, turtle.y, turtle.radius, 0, Math.PI * 2);
@@ -135,23 +112,41 @@
       ctx.fill();
     }
 
-    // Canudo
-    function drawStripedPipe(x, y, height) {
+    // Canudo 
+    function drawStraw(x, y, height) {
       const stripeWidth = 15;
       for (let i = 0; i < height; i += stripeWidth) {
         ctx.fillStyle = (Math.floor(i / stripeWidth) % 2 === 0) ? "red" : "white";
-        ctx.fillRect(x, y + i, pipeWidth, stripeWidth);
+        ctx.beginPath();
+        ctx.rect(x, y + i, pipeWidth, stripeWidth);
+        ctx.fill();
       }
     }
 
-    // Garrafa
+    // Garrafa (nem parece)
     function drawBottle(x, y, height) {
       ctx.fillStyle = "#00bfff";
       ctx.fillRect(x + 20, y, pipeWidth - 40, height);
       ctx.fillStyle = "#0080ff";
-      ctx.fillRect(x + 30, y - 10, pipeWidth - 60, 10);
+      ctx.fillRect(x + 35, y - 10, pipeWidth - 70, 10);
+      ctx.fillStyle = "#0040ff";
+      ctx.fillRect(x + 37, y - 15, pipeWidth - 74, 5);
       ctx.fillStyle = "rgba(255,255,255,0.3)";
       ctx.fillRect(x + 25, y + 10, 5, height - 20);
+    }
+
+    // Chuva
+    let rainDrops = [];
+    function drawRain() {
+      for (let i = 0; i < 10; i++) {
+        rainDrops.push({ x: Math.random() * canvas.width, y: 0, speed: 5 + Math.random() * 5 });
+      }
+      ctx.fillStyle = "rgba(255,255,255,0.5)";
+      rainDrops.forEach((r, i) => {
+        ctx.fillRect(r.x, r.y, 2, 10);
+        r.y += r.speed;
+        if (r.y > canvas.height) rainDrops.splice(i, 1);
+      });
     }
 
     // Fumaça
@@ -159,49 +154,56 @@
       for (let i = 0; i < 5; i++) {
         const x = Math.random() * canvas.width;
         const y = Math.random() * 150;
-        ctx.fillStyle = "rgba(60,60,60,0.4)";
+        ctx.fillStyle = "rgba(80,80,80,0.4)";
         ctx.beginPath();
         ctx.arc(x, y, 60 + Math.random() * 40, 0, Math.PI * 2);
         ctx.fill();
       }
     }
 
-    // Chuva
-    let rainDrops = [];
-    function drawRain() {
-      if (rainDrops.length < 100) {
-        rainDrops.push({ x: Math.random() * canvas.width, y: 0 });
+    // Mar
+    let waveOffset = 0;
+    function drawSea() {
+      const seaHeight = 80;
+      const yBase = canvas.height - seaHeight;
+      let seaColor = "#1e90ff";
+      if (score >= 50) seaColor = "#006994";
+      if (score >= 100) seaColor = "#3b3b3b";
+      ctx.fillStyle = seaColor;
+      ctx.fillRect(0, yBase, canvas.width, seaHeight);
+
+      ctx.fillStyle = (score >= 100) ? "#555" : "#00bfff";
+      ctx.beginPath();
+      ctx.moveTo(0, yBase);
+      for (let x = 0; x <= canvas.width; x++) {
+        const y = yBase + Math.sin((x + waveOffset) * 0.02) * 10;
+        ctx.lineTo(x, y);
       }
-      ctx.strokeStyle = "rgba(200,200,255,0.5)";
-      ctx.lineWidth = 2;
-      rainDrops.forEach(drop => {
-        ctx.beginPath();
-        ctx.moveTo(drop.x, drop.y);
-        ctx.lineTo(drop.x + 2, drop.y + 10);
-        ctx.stroke();
-        drop.y += 10;
-        if (drop.y > canvas.height) drop.y = 0;
-      });
+      ctx.lineTo(canvas.width, canvas.height);
+      ctx.lineTo(0, canvas.height);
+      ctx.closePath();
+      ctx.fill();
+      waveOffset += 2;
     }
 
-    // Pipes (canudos/garrafas)
+    // Obstáculos
     function drawPipes() {
       pipes.forEach(pipe => {
         if (score < 15) {
-          drawStripedPipe(pipe.x, 0, pipe.top);
-          drawStripedPipe(pipe.x, pipe.top + pipe.gap, canvas.height - (pipe.top + pipe.gap));
+          drawStraw(pipe.x, 0, pipe.top);
+          drawStraw(pipe.x, pipe.top + gap, canvas.height - (pipe.top + gap));
         } else if (score < 30) {
           drawBottle(pipe.x, 0, pipe.top);
-          drawBottle(pipe.x, pipe.top + pipe.gap, canvas.height - (pipe.top + pipe.gap));
+          drawBottle(pipe.x, pipe.top + gap, canvas.height - (pipe.top + gap));
         } else if (score < 50) {
           drawBottle(pipe.x, 0, pipe.top);
-          drawBottle(pipe.x, pipe.top + pipe.gap, canvas.height - (pipe.top + pipe.gap));
+          drawBottle(pipe.x, pipe.top + gap, canvas.height - (pipe.top + gap));
+        } else if (score < 100) {
+          drawStraw(pipe.x, 0, pipe.top);
+          drawStraw(pipe.x, pipe.top + gap, canvas.height - (pipe.top + gap));
         } else {
-          // Poluição total
-          if (Math.random() > 0.5) drawBottle(pipe.x, 0, pipe.top);
-          else drawStripedPipe(pipe.x, 0, pipe.top);
-          if (Math.random() > 0.5) drawBottle(pipe.x, pipe.top + pipe.gap, canvas.height - (pipe.top + pipe.gap));
-          else drawStripedPipe(pipe.x, pipe.top + pipe.gap, canvas.height - (pipe.top + pipe.gap));
+          drawBottle(pipe.x, 0, pipe.top);
+          drawBottle(pipe.x, pipe.top + gap, canvas.height - (pipe.top + gap));
         }
       });
     }
@@ -209,7 +211,7 @@
     function updatePipes() {
       if (frame % Math.floor(pipeRate) === 0) {
         let top = Math.random() * (canvas.height / 2);
-        pipes.push({ x: canvas.width, top: top, gap: baseGap, passed: false });
+        pipes.push({ x: canvas.width, top: top, passed: false });
       }
 
       pipes.forEach(pipe => {
@@ -219,21 +221,18 @@
           turtle.x + turtle.radius > pipe.x &&
           turtle.x - turtle.radius < pipe.x + pipeWidth &&
           (turtle.y - turtle.radius < pipe.top ||
-           turtle.y + turtle.radius > pipe.top + pipe.gap)
-        ) {
-          resetGame();
-        }
+           turtle.y + turtle.radius > pipe.top + gap)
+        ) resetGame();
 
         if (!pipe.passed && pipe.x + pipeWidth < turtle.x - turtle.radius) {
           score++;
           pipe.passed = true;
-
+          // Aumenta dificuldade 
           if (score % 10 === 0) {
-            speed += 0.6;
-            baseGap -= 8;
-            pipeRate -= 3;
-            if (baseGap < 120) baseGap = 120;
-            if (pipeRate < 60) pipeRate = 60;
+            speed += 0.4;
+            turtle.gravity += 0.05;
+            if (gap > 120) gap -= 5;
+            if (pipeRate > 80) pipeRate -= 2;
           }
         }
       });
@@ -250,17 +249,17 @@
     function updateTurtle() {
       turtle.velocity += turtle.gravity;
       turtle.y += turtle.velocity;
-
       if (turtle.y + turtle.radius > canvas.height - 80) resetGame();
       if (turtle.y - turtle.radius < 0) turtle.y = turtle.radius;
     }
 
     function resetGame() {
-      alert("🐢 Game Over! Pontos: " + score + "\nA poluição aumentou... cuide dos oceanos!");
+      alert("🐢 Game Over! Pontos: " + score);
       pipes = [];
       score = 0;
       speed = 3;
-      baseGap = 180;
+      turtle.gravity = 0.5;
+      gap = 180;
       pipeRate = 110;
       turtle.y = canvas.height / 2;
       turtle.velocity = 0;
@@ -268,26 +267,14 @@
     }
 
     function loop() {
-      // Fundo muda com poluição
-      if (score < 50) {
-        ctx.fillStyle = "linear-gradient(to bottom, #6ec6ff, #b3e5fc)";
-      } else {
-        const darkness = Math.min((score - 50) * 2, 100);
-        ctx.fillStyle = `rgb(${110 - darkness}, ${198 - darkness}, ${255 - darkness})`;
-      }
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      drawClouds();
+      if (score < 50) drawClouds();
+      if (score >= 50) drawSmoke();
+      if (score >= 50) drawRain();
       drawPipes();
       drawSea();
       drawTurtle();
       drawScore();
-
-      if (score >= 50) {
-        drawSmoke();
-        drawRain();
-      }
-
       updateTurtle();
       updatePipes();
       frame++;
@@ -295,9 +282,7 @@
     }
 
     document.addEventListener("keydown", e => {
-      if (e.code === "Space") {
-        turtle.velocity = turtle.lift;
-      }
+      if (e.code === "Space") turtle.velocity = turtle.lift;
     });
 
     loop();
