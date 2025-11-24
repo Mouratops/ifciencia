@@ -1,10 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const btn = document.getElementById("btnSaibaMais");
-    const textoMais = document.getElementById("mais");
-  
+  const botoes = document.querySelectorAll(".btnSaibaMais");
+  const textoMais = document.getElementById("mais");
+
+  botoes.forEach((btn) => {
     btn.addEventListener("click", () => {
+      const textoMais = btn.previousElementSibling.querySelector(".mais");
+
       if (textoMais.style.display === "none" || textoMais.style.display === "") {
-        textoMais.style.display = "block"; 
+        textoMais.style.display = "block";
         btn.textContent = "Mostrar menos";
       } else {
         textoMais.style.display = "none";
@@ -12,3 +15,5 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+});
+
