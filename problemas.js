@@ -1,19 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const botoes = document.querySelectorAll(".btnSaibaMais");
-  const textoMais = document.getElementById("mais");
-
-  botoes.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const textoMais = btn.previousElementSibling.querySelector(".mais");
-
-      if (textoMais.style.display === "none" || textoMais.style.display === "") {
-        textoMais.style.display = "block";
-        btn.textContent = "Mostrar menos";
-      } else {
-        textoMais.style.display = "none";
-        btn.textContent = "Saiba mais";
-      }
+    document.querySelectorAll('.btnSaibaMais').forEach(button => {
+        button.addEventListener('click', () => {
+            const span = button.previousElementSibling.querySelector('#mais');
+            if (span) {
+                if (span.style.display === 'none' || span.style.display === '') {
+                    span.style.display = 'inline';
+                    button.textContent = 'Ver menos'; // Altera o texto do botão
+                } else {
+                    span.style.display = 'none';
+                    button.textContent = 'Saiba mais'; // Retorna ao texto original
+                }
+            }
+        });
     });
-  });
 });
-
