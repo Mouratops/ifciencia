@@ -1,0 +1,131 @@
+:root {
+    --azul-escuro: #1d1c52;
+    --azul-claro: #6b98cc;
+    --branco: #ffffff;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    text-align: center;
+    font-family: 'Jockey One', sans-serif;
+    background: linear-gradient(to bottom, var(--azul-claro), var(--azul-escuro));
+    color: var(--branco);
+    min-height: 100vh;
+  }
+  
+  header {
+  backdrop-filter: blur(8px);
+  padding: 20px;
+  top: 0;
+  z-index: 10;
+  }
+  
+  header h1 {
+    margin: 0;
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  
+  header p {
+   margin: 5px 0 15px;
+   font-size: 13px;
+   opacity: 0.9;
+   font-family: Arial, Helvetica, sans-serif;
+ }
+  
+  nav {
+    display: flex;
+  justify-content: center;
+  gap: 15px;
+  }
+  
+  nav a {
+    margin-top: 35px;
+    width: 10%;
+    padding: 15px 35px;
+    background: linear-gradient(135deg, #213271 0%, #5D7AC9 100%);
+    color:#1D1C52;
+    font-size: 17px;
+    font-weight: 1px;
+    border: none;
+    border-radius: 50px; 
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  #cadastro-box button:hover {
+    background: linear-gradient(135deg, #5C7BCA 0%, #B0C3E4 100%);
+    color: #3D4F88;
+    transform: scale(1.02);
+  }
+  
+  
+  nav a:hover {
+    transform: scale(1.05);
+    background: linear-gradient(145deg, #d5e3ff, #a5c2ff);
+  }
+  
+  main {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  
+  section {
+    background-color: var(--branco);
+    padding: 30px;
+    border-radius: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    color: var(--azul-escuro);
+  }
+  
+  h2 {
+    font-family: 'Lilita One', cursive;
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    font-size: 1.1em;
+  }
+  
+  footer {
+    background-color: var(--azul-escuro);
+    color: var(--branco);
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+  }
+  
+  @media (max-width: 768px) {
+    header h1 {
+      font-size: 2.5em;
+    }
+  
+    nav {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    nav a {
+      width: 80%;
+      text-align: center;
+    }
+  }
+
+  nav a.botao-sobre-nos:hover {
+    background: #4a72b8;
+    color: var(--branco);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  }
+  
+  
