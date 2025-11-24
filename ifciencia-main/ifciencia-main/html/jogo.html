@@ -22,7 +22,7 @@
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
 
-    // Tela cheia
+  
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -30,7 +30,7 @@
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
-    // Tartaruga feia
+    
     let turtle = {
       x: canvas.width / 6,
       y: canvas.height / 2,
@@ -40,7 +40,7 @@
       velocity: 0
     };
 
-    // Obstáculos
+   
     let pipes = [];
     let frame = 0;
     const pipeWidth = 90;
@@ -49,7 +49,7 @@
     let speed = 3;
     let pipeRate = 110;
 
-    // ☁️ Nuvens
+    
     let clouds = [];
     for (let i = 0; i < 10; i++) {
       clouds.push({
@@ -74,7 +74,7 @@
       });
     }
 
-    // Original
+    
     function drawTurtle() {
       ctx.beginPath();
       ctx.arc(turtle.x, turtle.y, turtle.radius, 0, Math.PI * 2);
@@ -112,7 +112,7 @@
       ctx.fill();
     }
 
-    // Canudo 
+    
     function drawStraw(x, y, height) {
       const stripeWidth = 15;
       for (let i = 0; i < height; i += stripeWidth) {
@@ -123,7 +123,7 @@
       }
     }
 
-    // Garrafa (nem parece)
+   
     function drawBottle(x, y, height) {
       ctx.fillStyle = "#00bfff";
       ctx.fillRect(x + 20, y, pipeWidth - 40, height);
@@ -135,7 +135,7 @@
       ctx.fillRect(x + 25, y + 10, 5, height - 20);
     }
 
-    // Chuva
+    
     let rainDrops = [];
     function drawRain() {
       for (let i = 0; i < 10; i++) {
@@ -149,7 +149,7 @@
       });
     }
 
-    // Fumaça
+    
     function drawSmoke() {
       for (let i = 0; i < 5; i++) {
         const x = Math.random() * canvas.width;
@@ -161,7 +161,7 @@
       }
     }
 
-    // Mar
+   
     let waveOffset = 0;
     function drawSea() {
       const seaHeight = 80;
@@ -186,7 +186,7 @@
       waveOffset += 2;
     }
 
-    // Obstáculos
+    
     function drawPipes() {
       pipes.forEach(pipe => {
         if (score < 15) {
@@ -289,3 +289,4 @@
   </script>
 </body>
 </html>
+
